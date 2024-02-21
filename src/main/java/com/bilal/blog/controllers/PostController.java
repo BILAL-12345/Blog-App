@@ -2,6 +2,7 @@ package com.bilal.blog.controllers;
 
 import com.bilal.blog.payloads.ApiResponse;
 import com.bilal.blog.payloads.PostDto;
+import com.bilal.blog.payloads.PostResponse;
 import com.bilal.blog.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,9 +45,12 @@ public class PostController {
 
     //get all posts
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getAllPost(){
-        List<PostDto> allPosts = this.postService.getAllPost();
-        return new ResponseEntity<List<PostDto>>(allPosts, HttpStatus.OK);
+    public ResponseEntity<PostResponse> getAllPost(
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "3", required = false) Integer pageSize
+    ){
+        PostResponse postResponse = this.postService.getAllPost(pageNumber, pageSize);
+        return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
     }
 
     //get post details by id

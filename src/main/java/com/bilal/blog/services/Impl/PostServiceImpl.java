@@ -5,12 +5,16 @@ import com.bilal.blog.entities.Post;
 import com.bilal.blog.entities.User;
 import com.bilal.blog.exceptions.ResourceNotFoundException;
 import com.bilal.blog.payloads.PostDto;
+import com.bilal.blog.payloads.PostResponse;
 import com.bilal.blog.repositories.CategoryRepo;
 import com.bilal.blog.repositories.PostRepo;
 import com.bilal.blog.repositories.UserRepo;
 import com.bilal.blog.services.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -64,10 +68,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost() {
-        List<Post> allPosts = this.postRepo.findAll();
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
+
+        Pageable p = PageRequest.of(pageNumber, pageNumber);
+
+        Page<Post> pagePost = this.postRepo.findAll(p);
+        List<Post> allPosts = pagePost.getContent();
         List<PostDto> postDtos = allPosts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-        return postDtos;
+
+        PostResponse postResponse = new PostResponse();
+
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements((int) pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(postResponse.isLastPage());
+
+        return postResponse;
     }
 
     @Override
