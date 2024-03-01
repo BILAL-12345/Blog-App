@@ -70,7 +70,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 
-        Pageable p = PageRequest.of(pageNumber, pageNumber);
+        Pageable p = PageRequest.of(pageNumber, pageSize);
 
         Page<Post> pagePost = this.postRepo.findAll(p);
         List<Post> allPosts = pagePost.getContent();
