@@ -1,12 +1,13 @@
 package com.bilal.blog.payloads;
 
-import com.bilal.blog.entities.Category;
-import com.bilal.blog.entities.User;
+import com.bilal.blog.entities.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,4 +21,6 @@ public class PostDto {
     private Date addedDate;
     private CategoryDto category;
     private UserDto user;
+
+    private Set<CommentDto> comments = new HashSet<>();
 }
